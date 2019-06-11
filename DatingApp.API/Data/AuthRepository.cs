@@ -58,6 +58,8 @@ namespace DatingApp.API.Data
 
         private void CreatepasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
+            // Hashing is different from encryption , it can not use any key for generation , and is can not 
+            // reverse only. 
             using(var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 passwordSalt = hmac.Key;

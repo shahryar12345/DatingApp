@@ -25,7 +25,7 @@ namespace DatingApp.API.Controllers
             _config = config;
         }
 
-        [HttpPost("registor")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDtos userForRegisterDtos )
         {
             // validate Request
@@ -56,7 +56,7 @@ namespace DatingApp.API.Controllers
                 new Claim(ClaimTypes.NameIdentifier , userFormRepo.Id.ToString()),
                 new Claim(ClaimTypes.Name , userFormRepo.UserName)         
             };
-
+            // Token is Generated From a Key because its Encryption Process , it can be decrypted.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
             var creds = new SigningCredentials(key , SecurityAlgorithms.HmacSha512Signature);
             
