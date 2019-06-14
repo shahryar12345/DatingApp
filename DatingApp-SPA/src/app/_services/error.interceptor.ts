@@ -11,7 +11,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             catchError(error => {
                 if(error.status === 401)
                 {
-                    return throwError(error.statusText);
+                    return throwError(error.statusText + ' : Status Code 401 : ' +  error.error);
                 }
                 if (error instanceof HttpErrorResponse) {
                     const applicationError = error.headers.get('Application-Error');
@@ -25,12 +25,16 @@ export class ErrorInterceptor implements HttpInterceptor {
                         for (const key in serverError) {
                             if (serverError[key]) {
                                 modalStateError += serverError[key] +  '\n';
-                                //console.log(serverError[key] + '  Hello Error \n\n');
-                                //console.log(serverError[key] + '  Hello Error \n\n');  
+                                console.log(serverError[key] + '  Hello Error \n\n');
+                                console.log(serverError[key] + '  Hello Error \n\n');
                             }
                         }
                     }
-                    return throwError(modalStateError || serverError || 'Server Error');
+                    if(error.status === 400)
+                    {
+                        return throwError(error.statusText + ' : Status Code 400  ' + error.error);
+                    }
+                    return throwError(modalStateError || serverError || 'Server Errorsss');
                 }
             })
         );
