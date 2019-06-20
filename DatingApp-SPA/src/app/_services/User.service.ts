@@ -35,4 +35,15 @@ updateUser(id: number , user: User)
   return this.http.put(this.baseUrl + 'users/' + id , user);
 }
 
+SetMainPhoto(userID: number , id: number)
+{
+  return this.http.post(this.baseUrl + 'user/' + userID + '/photos/' + id + '/setMain' , {})
+  // Send Empty onject as The Request Body
+}
+
+deletePhoto(userID: number , id: number)
+{
+  return this.http.delete(this.baseUrl + 'user/' + userID + '/photos/' + id );
+   
+}
 }

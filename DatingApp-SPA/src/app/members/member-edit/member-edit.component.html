@@ -1,17 +1,14 @@
-
 <div class="container mt-4">
   <div class="row">
     <div class="col-sm-4">
         <h1>{{user.knownAs}}'s Profile</h1>
     </div>
     <div class="col-sm-8">
-      <div class="alert alert-info" *ngIf="editForm.dirty">
-        
+      <div class="alert alert-info" *ngIf="editForm.dirty">        
           <strong>
             Infromation
           </strong>
-          You have made changes. Any unsaved changes will be lost..!!!
-        
+          You have made changes. Any unsaved changes will be lost..!!!  
       </div>
     </div>
   </div>
@@ -19,7 +16,8 @@
   <div class="col-sm-4">
     <div class="card">
       <img src="" alt="" class="card-img-top img-thumbnail" height=100%
-      src="{{user?.photoUrl}}" alt={{user?.knownAs}}>
+      src="{{photoUrl}}" alt={{photoUrl}}>
+      <!-- user?.photoUrl -->
       <div class="card-body">
           <div>
             <strong>Location</strong>
@@ -67,7 +65,6 @@
                   <div class="form-inline">
                     <label for="city"></label>
                     <input class="form-control" type="text" name="city" [(ngModel)]="user.city" />
-
                     <label for="country"></label>
                     <input class="form-control" type="text" name="country" [(ngModel)]="user.country" />
                   </div>
@@ -76,7 +73,7 @@
             <tab heading="Edit Photos">
               <h4>Interest</h4>
               <p>
-                Photo Edit will go here
+                <app-photo-editor [photos]="user.photos" (GetMemberPhotoChange)="UpdateMainPhoto($event)"> </app-photo-editor>
               </p>
             </tab>
           </tabset>
