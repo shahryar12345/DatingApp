@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 
 import {NgxGalleryModule} from 'ngx-gallery';
-
+import { TimeAgoPipe } from 'time-ago-pipe';
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { AuthService } from './_services/Auth.service';
@@ -50,7 +50,8 @@ export function tokenGetters()
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      TimeAgoPipe
    ],
    imports: [
       BrowserModule,
@@ -82,6 +83,7 @@ export function tokenGetters()
       MemberListResolver,
       MemberEditResolver,
       PreventUnsavedChanges,
+      
    ],
    bootstrap: [
       AppComponent
