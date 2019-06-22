@@ -32,7 +32,7 @@ namespace DatingApp.API.Controllers
             return Ok(UserToReturn);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}" , Name="GetUser")] // Specify Name because We use CreatedAtRoute in AuthController
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _repo.GetUser(id);

@@ -44,8 +44,7 @@ export class PhotoEditorComponent implements OnInit {
   initializeUploader()
   {
     this.uploader = new FileUploader({
-      url: this.baseUrl  + 'user/' + this.autheservice.decodedToken
-      .nameid + '/photos' , 
+    url: this.baseUrl  + 'user/' + this.autheservice.decodedToken.nameid + '/photos' ,
       authToken: 'Bearer ' + localStorage.getItem('token'),
       isHTML5: true,
       allowedFileType: ['image'],
@@ -54,7 +53,8 @@ export class PhotoEditorComponent implements OnInit {
       maxFileSize: 10 * 1024 * 1024
     });
 
-    this.uploader.onAfterAddingFile = (file) => {file.withCredentials = false; };
+    this.uploader.onAfterAddingFile = (file) => {file.withCredentials = false; }; // Show CORS Error without this line
+
     this.uploader.onSuccessItem = (item , response , status , headers) => 
     {
       if(response)
@@ -68,6 +68,12 @@ export class PhotoEditorComponent implements OnInit {
         //   inMain: res.isMain
         // };
         this.photos.push(res);
+        if(res.isMain)
+        {
+          this.autheservice.chanageMemberPhoto(res.url);
+          this.autheservice.currentUser.photoUrl = res.url;
+          localStorage.setItem('user' , JSON.stringify(this.autheservice.currentUser));
+        }
       }
     };
   }

@@ -7,7 +7,7 @@
   <div class="col-sm-4">
     <div class="card">
       <img src="" alt="" class="card-img-top img-thumbnail" height=100%
-      src="{{user?.photoUrl}}" alt={{user?.knownAs}}>
+      src="{{user?.photoUrl || '../../../../../assets/person-default.png'}}" alt={{user?.knownAs}}>
       <div class="card-body">
           <div>
             <strong>Location</strong>
@@ -41,7 +41,7 @@
           <tabset class="member-tabset">
             <tab heading="About {{user?.knownAs}}">
             <h4>Description</h4>   
-            <p>{{user?.introduction}}</p>
+            <p>{{user?.introduction || 'User Did Not Set Thier Introduction Yet'}}</p>
             <h4>Looking For</h4>
             <p>{{user?.lookingFor}}</p>
             </tab>
