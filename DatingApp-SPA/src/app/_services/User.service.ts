@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, pipe } from 'rxjs';
+import { Observable, pipe, of } from 'rxjs';
 import { User } from '../_model/User';
 import { PaginatedResult } from '../_model/Pagination';
 import { map } from 'rxjs/operators';
@@ -23,7 +23,7 @@ export class UserService {
 
 constructor(private http: HttpClient) {}
 
-getUsers(page?, itemPerPage? , userPrams?): Observable<PaginatedResult<User[]>>
+getUsers(page?, itemPerPage? , userPrams?, likesParams?): Observable<PaginatedResult<User[]>>
 {
   const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
  
@@ -47,6 +47,16 @@ getUsers(page?, itemPerPage? , userPrams?): Observable<PaginatedResult<User[]>>
   // params is sent to servver for paginated Result.
   // Pipe function will format the response in 2 part , get body result and save in saperate varialble and get pagination value from header and save in seperate variable.
   
+  if(likesParams === 'Likers')
+  {
+    params = params.append('likers' , 'true');
+  }
+
+  if(likesParams === 'Likees')
+  {
+    params = params.append('likees' , 'true');
+  }
+
   return this.http.get<User[]>(this.baseUrl + 'users/' , { observe: 'response' , params}) //httpOptions
     .pipe(
       map(response => {
@@ -80,4 +90,11 @@ deletePhoto(userID: number , id: number)
 {
   return this.http.delete(this.baseUrl + 'user/' + userID + '/photos/' + id );
 }
+
+
+sendLike (id: number, recipientId: number)
+{
+  return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {}); // Empty object {}
+}
+
 }

@@ -10,6 +10,7 @@ import { MemberListResolver } from './_resolvers/member-list-resolver.1';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './_resolvers/member-edit-resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes-guard';
+import { ListResolver } from './_resolvers/lists-resolvers';
 
 export const appRoutes: Routes = [
     { path: '' , component: HomeComponent},
@@ -25,7 +26,7 @@ export const appRoutes: Routes = [
         {path: 'member/edit' , component: MemberEditComponent ,
             resolve: {user: MemberEditResolver} , canDeactivate: [PreventUnsavedChanges] },
         {path: 'messages' , component: MessagesComponent},
-        {path: 'list' , component: ListComponent}
+        {path: 'list' , component: ListComponent , resolve: {users: ListResolver}} //'users' this word is user in HTML page for retriving data from resolver
     ]
     },
     { path: '**' , redirectTo: '' , pathMatch: 'full'}, // any route other than the define one above with redirect to Home
