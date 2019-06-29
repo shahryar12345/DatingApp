@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/_model/User';
 import { UserService } from 'src/app/_services/User.service';
 import { AlertifyServiceService } from 'src/app/_services/AlertifyService.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-member-detail',
@@ -11,6 +12,8 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
+
+  @ViewChild('memberTabs') memberTabs: TabsetComponent;
 
   user: User;
   gelleryOptions: NgxGalleryOptions [];
@@ -27,7 +30,11 @@ export class MemberDetailComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.user = data['user'];
     });
-
+    this.route.queryParams.subscribe(params =>
+      {
+        const selectedTab = params['tab'];
+        this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
+      })
     this.gelleryOptions = [
       {
         width: '500px',
@@ -56,6 +63,13 @@ getImage() {
   return imageUrls;
 }
   
+
+
+selectTab(tabid: number)
+{
+  this.memberTabs.tabs[tabid].active = true;
+}
+
   // This msg is work fine but we Use resolver in this case, resolver is used to 
   // retrive Data from server in a route , before desplaying it to html page. 
   // If resolver Used so we have no need to use SAVE NEVIGATION OPERATOR (?) is HTML page

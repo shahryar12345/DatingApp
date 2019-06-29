@@ -17,7 +17,13 @@ export class ListComponent implements OnInit {
   users : User[];
   pagination: Pagination;
   likesParam: string;
-  
+  user: User = JSON.parse(localStorage.getItem('user'));
+  genderList = [ {value: 'male' , display: 'Males'} ,
+                 {value: 'female' , display: 'Females'} 
+                ]
+  userParams: any = {};              
+
+
   constructor(private userService: UserService ,
     private alertify: AlertifyServiceService,
     private route: ActivatedRoute , private authService: AuthService) { }
@@ -29,6 +35,21 @@ export class ListComponent implements OnInit {
     });
 
     this.likesParam = 'Likers';
+    this.userParams.gender = this.user.gender === 'female' ?  'male' : 'female';
+    this.userParams.minAge = 18;
+    this.userParams.maxAge = 99;
+    this.userParams.orderBy = 'lastActive';
+  
+  }
+
+
+  resetFilters()
+  {
+    this.userParams.gender = this.user.gender === 'female' ?  'male' : 'female';
+    this.userParams.minAge = 18;
+    this.userParams.maxAge = 99;
+    this.userParams.orderBy = 'lastActive';
+    this.loadUsers();
   }
 
 
@@ -43,7 +64,7 @@ export class ListComponent implements OnInit {
   loadUsers()
   {
     this.userService.getUsers(this.pagination.currentPage 
-      , this.pagination.itemPerPage ,  null , this.likesParam)
+      , this.pagination.itemPerPage ,  this.userParams , this.likesParam)
     .subscribe((res: PaginatedResult<User[]>) => {
       this.users = res.result;
       this.pagination = res.pagination;

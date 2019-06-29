@@ -5,6 +5,8 @@ import { Observable, pipe, of } from 'rxjs';
 import { User } from '../_model/User';
 import { PaginatedResult } from '../_model/Pagination';
 import { map } from 'rxjs/operators';
+import { Message } from '../_model/message';
+import { Response } from 'selenium-webdriver/http';
 
 
 // const httpOptions = {
@@ -95,6 +97,53 @@ deletePhoto(userID: number , id: number)
 sendLike (id: number, recipientId: number)
 {
   return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {}); // Empty object {}
+}
+
+getMessages(id: number , page? , itemPerPage? , messageContainer? ,)
+{
+  const paginatedResult: PaginatedResult<Message[]> = new PaginatedResult<Message[]>();
+  let params = new HttpParams();
+
+  if (page != null && itemPerPage != null)
+  {
+    params = params.append('pageNumber' , page);
+    params = params.append('pageSize' , itemPerPage);
+    params = params.append('messageContainer' , messageContainer);
+    
+  }
+
+  return this.http.get<Message[]>(this.baseUrl + 'users/' + id + "/messages", {observe: 'response' , params})
+  .pipe(
+    map(response => {
+      paginatedResult.result = response.body;
+      if(response.headers.get('Pagination') !== null)
+      {
+        paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+      }
+      return paginatedResult;
+  })
+  );
+}
+
+getMessageThread(id: number , recipientId: number)
+{
+  return this.http.get<Message[]>(this.baseUrl + 'users/' + id + '/messages/thread/' + recipientId);
+}
+
+sendMessage(id: number , message: Message)
+{
+  return this.http.post(this.baseUrl + 'users/' + id + '/messages'  , message);
+}
+
+deleteMessages(id: number , userId: number)
+{
+  return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + id, {});
+}
+
+markAsRead(userId: number , messageId: number)
+{
+  this.http.post(this.baseUrl + 'users/'  + userId + '/messages/' + messageId + '/read' , {})
+  .subscribe(); // simply just execute the method here.
 }
 
 }

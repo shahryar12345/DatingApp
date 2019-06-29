@@ -14,6 +14,8 @@ namespace DatingApp.API.Data
 
         public DbSet<Like> Likes {get; set;}
 
+        public DbSet<Message> Messages {get; set;}
+
 
         // Override the DBcontext Class method to define relation of likes and users 
 
@@ -35,7 +37,16 @@ namespace DatingApp.API.Data
                 .HasForeignKey(u => u.LikerId)
                 .OnDelete(DeleteBehavior.Restrict); 
             
-            
+
+            builder.Entity<Message>()
+            .HasOne(u => u.Sender)
+            .WithMany(m => m.MessagesSent)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Message>()
+            .HasOne(u => u.Recipient)
+            .WithMany(m => m.MessagesReceived)
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

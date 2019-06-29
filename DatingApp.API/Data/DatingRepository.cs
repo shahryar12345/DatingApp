@@ -115,5 +115,49 @@ namespace DatingApp.API.Data
         {
             return await _context.Likes.FirstOrDefaultAsync(u => u.LikerId == userId && u.LikeeId == recipientId);
         }
+
+        public async Task<Message> GetMessage(int id)
+        {
+        return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+
+        public async Task<IEnumerable<Message>> GetMesssageThread(int userId, int recipientId)
+        {
+            var message =  await _context.Messages
+            .Include(u => u.Sender).ThenInclude(p => p.Photos)
+            .Include(u => u.Recipient).Include(u => u.Recipient).ThenInclude(p =>p.Photos)
+            .Where(m => m.RecipientId == userId && m.RecipientDeleted == false && m.SenderId == recipientId ||
+            m.RecipientId == recipientId && m.SenderDeleted == false && m.SenderId == userId)
+            .OrderByDescending(m => m.MessageSent).
+            ToListAsync();
+
+            return message;
+        }
+
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
+        {
+            var message = _context.Messages.Include(u => u.Sender).ThenInclude(p => p.Photos)
+            .Include(u => u.Recipient).Include(u => u.Recipient).ThenInclude(p =>p.Photos)
+            .AsQueryable();
+
+            switch (messageParams.MessageContainer)
+            {
+                case "Inbox":
+                    message = message.Where(u => u.RecipientId == messageParams.UserId && u.RecipientDeleted == false);
+                    break;
+                case "Outbox":
+                    message = message.Where(u => u.SenderId == messageParams.UserId && u.SenderDeleted == false);
+                    break;
+                default:
+                    message = message.Where(u => u.RecipientId == messageParams.UserId && u.IsRead == false && u.RecipientDeleted == false);
+                    break;
+            }
+
+            message = message.OrderByDescending(d => d.MessageSent);
+
+            return await PagedList<Message>.CreateAsync(message , messageParams.PageNumber , messageParams.PageSize);
+
+        }
     }
 }
